@@ -1,0 +1,24 @@
+services:
+  # Unified Smart Canteen Service (Backend + Frontend + Admin in one URL)
+  - type: web
+    name: smart-canteen-app
+    env: node
+    plan: free
+    buildCommand: |
+      # Install dependencies for all modules
+      npm run install-all
+      # Build frontend and admin
+      npm run build-all
+      # Move built files to backend public directory
+      mkdir -p backend/public
+      cp -r frontend/dist/* backend/public/
+      mkdir -p backend/public/admin
+      cp -r admin/dist/* backend/public/admin/
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    # Add your environment variables in Render dashboard:
+    # MONGODB_URL, JWT_SECRET, STRIPE_SECRET_KEY
