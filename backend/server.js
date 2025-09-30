@@ -39,16 +39,18 @@ app.use("/api/order",orderRouter)
 
 // Serve static files for frontend and admin
 if (process.env.NODE_ENV === 'production') {
-    // Serve static files
-    app.use(express.static(path.join(__dirname, 'public')))
+    // Serve static files for admin panel (at /admin) - must come first
     app.use('/admin', express.static(path.join(__dirname, 'public/admin')))
     
-    // Handle admin routes
+    // Serve static files for frontend (at root)
+    app.use(express.static(path.join(__dirname, 'public')))
+    
+    // Handle admin panel routes (React Router support)
     app.get('/admin', (req, res) => {
         res.sendFile(path.join(__dirname, 'public/admin/index.html'))
     })
     
-    // Handle all other routes (frontend SPA)
+    // Handle frontend SPA routes - must be AFTER all specific routes
     app.get('/', (req, res) => {
         res.sendFile(path.join(__dirname, 'public/index.html'))
     })

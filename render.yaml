@@ -6,9 +6,10 @@ services:
     plan: free
     buildCommand: |
       # Install dependencies for all modules
-      npm run install-all
-      # Build frontend and admin
-      npm run build-all
+      npm install
+      cd frontend && npm install && npm run build && cd ..
+      cd admin && npm install && npm run build && cd ..
+      cd backend && npm install && cd ..
       # Move built files to backend public directory
       mkdir -p backend/public
       cp -r frontend/dist/* backend/public/
