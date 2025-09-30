@@ -1,89 +1,24 @@
-services:services:
-
-  # Backend API Service  # Backend API Service
-
-  - type: web  - type: web
-
-    name: smart-canteen-backend    name: smart-canteen-backend
-
-    env: node    env: node
-
-    plan: free    plan: free
-
-    buildCommand: cd backend && npm install    buildCommand: cd backend && npm install
-
-    startCommand: cd backend && node server.js    startCommand: cd backend && node server.js
-
-    envVars:    envVars:
-
-      - key: NODE_ENV      - key: NODE_ENV
-
-        value: production        value: production
-
-      - key: PORT      - key: PORT
-
-        value: 10000        value: 10000
-
-    # Add your environment variables in Render dashboard:    # Add your environment variables in Render dashboard:
-
-    # MONGODB_URL, JWT_SECRET, STRIPE_SECRET_KEY, FRONTEND_URL, ADMIN_URL    # MONGODB_URL, JWT_SECRET, STRIPE_SECRET_KEY, FRONTEND_URL, ADMIN_URL
-
-
-
-  # Frontend Service (Static Site)  # Frontend Service (Static Site)
-
-  - type: web  - type: web
-
-    name: smart-canteen-frontend    name: smart-canteen-frontend
-
-    env: static    env: static
-
-    plan: free    plan: free
-
-    buildCommand: cd frontend && npm install && npm run build    buildCommand: cd frontend && npm install && npm run build
-
-    staticPublishPath: frontend/dist    staticPublishPath: frontend/dist
-
-    headers:    headers:
-
-      - path: /*      - path: /*
-
-        name: X-Frame-Options        name: X-Frame-Options
-
-        value: DENY        value: DENY
-
-      - path: /*      - path: /*
-
-        name: X-Content-Type-Options        name: X-Content-Type-Options
-
-        value: nosniff        value: nosniff
-
-
-
-  # Admin Panel Service (Static Site)    # Admin Panel Service (Static Site)  
-
-  - type: web  - type: web
-
-    name: smart-canteen-admin    name: smart-canteen-admin
-
-    env: static    env: static
-
-    plan: free    plan: free
-
-    buildCommand: cd admin && npm install && npm run build    buildCommand: cd admin && npm install && npm run build
-
-    staticPublishPath: admin/dist    staticPublishPath: admin/dist
-
-    headers:    headers:
-
-      - path: /*      - path: /*
-
-        name: X-Frame-Options        name: X-Frame-Options
-
-        value: DENY        value: DENY
-
-      - path: /*      - path: /*
-
-        name: X-Content-Type-Options        name: X-Content-Type-Options
-
-        value: nosniff        value: nosniff
+services:
+  # Unified Smart Canteen Service (Backend + Frontend + Admin in one URL)
+  - type: web
+    name: smart-canteen-app
+    env: node
+    plan: free
+    buildCommand: |
+      # Install dependencies for all modules
+      npm run install-all
+      # Build frontend and admin
+      npm run build-all
+      # Move built files to backend public directory
+      mkdir -p backend/public
+      cp -r frontend/dist/* backend/public/
+      mkdir -p backend/public/admin
+      cp -r admin/dist/* backend/public/admin/
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    # Add your environment variables in Render dashboard:
+    # MONGODB_URL, JWT_SECRET, STRIPE_SECRET_KEY
