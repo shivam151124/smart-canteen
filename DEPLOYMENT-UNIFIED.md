@@ -84,7 +84,7 @@ git push origin main
      - **Environment**: `Node`
      - **Build Command**: 
        ```bash
-       npm run install-all && npm run build-all && mkdir -p backend/public && cp -r frontend/dist/* backend/public/ && mkdir -p backend/public/admin && cp -r admin/dist/* backend/public/admin/
+       npm install && cd frontend && npm install && npm run build && cd ../admin && npm install && npm run build && cd ../backend && npm install && mkdir -p ../backend/public && cp -r ../frontend/dist/* ../backend/public/ && mkdir -p ../backend/public/admin && cp -r ../admin/dist/* ../backend/public/admin/
        ```
      - **Start Command**: `cd backend && node server.js`
 
