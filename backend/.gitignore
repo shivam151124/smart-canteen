@@ -1,0 +1,13 @@
+node_modules/node_modules/
+
+.env.env
+
+.env.local.env.local
+
+.env.production.env.production
+
+uploads/uploads/
+
+*.log*.log
+
+.DS_Store.DS_Store
